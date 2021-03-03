@@ -1,5 +1,6 @@
-import 'package:chat_app/src/routes/app_routes.dart';
 import 'package:flutter/material.dart';
+
+import 'package:chat_app/src/routes/app_routes.dart';
 
 void main() {
   runApp(ChatApp());
@@ -14,7 +15,7 @@ class ChatApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: AppRoutes.LOADING,
+      initialRoute: AppRoutes.LOGIN,
       routes: AppRoutes.getAppRoutes(),
     );
   }
