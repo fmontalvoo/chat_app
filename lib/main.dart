@@ -15,7 +15,7 @@ class ChatApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: AppRoutes.LOGIN,
+      initialRoute: AppRoutes.CHAT,
       routes: AppRoutes.getAppRoutes(),
     );
   }
