@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 
 class Labels extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final void Function() onPressed;
+
+  Labels({Key key, this.title, this.subtitle, this.onPressed})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
         children: [
           Text(
-            '¿No tienes cuenta?',
+            this.title,
             style: TextStyle(
                 color: Colors.black54,
                 fontSize: 15.0,
@@ -16,13 +23,13 @@ class Labels extends StatelessWidget {
           SizedBox(height: 20.0),
           FlatButton(
             child: Text(
-              'Crea una ahora!',
+              this.subtitle,
               style: TextStyle(
                   color: Colors.blue[600],
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold),
             ),
-            onPressed: () {},
+            onPressed: this.onPressed,
           )
         ],
       ),
