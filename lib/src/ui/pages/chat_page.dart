@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'package:chat_app/src/pages/widgets/chat_message.dart';
+import 'package:chat_app/src/ui/widgets/chat_message.dart';
 
 class ChatPage extends StatefulWidget {
   @override

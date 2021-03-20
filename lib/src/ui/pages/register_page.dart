@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:chat_app/src/pages/widgets/logo.dart';
-import 'package:chat_app/src/pages/widgets/labels.dart';
-import 'package:chat_app/src/pages/widgets/blue_button.dart';
-import 'package:chat_app/src/pages/widgets/custom_input.dart';
+import 'package:chat_app/src/ui/widgets/logo.dart';
+import 'package:chat_app/src/ui/widgets/labels.dart';
+import 'package:chat_app/src/ui/widgets/blue_button.dart';
+import 'package:chat_app/src/ui/widgets/custom_input.dart';
 
 import 'package:chat_app/src/routes/app_routes.dart';
 

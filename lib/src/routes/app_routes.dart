@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:chat_app/src/pages/chat_page.dart';
-import 'package:chat_app/src/pages/login_page.dart';
-import 'package:chat_app/src/pages/users_page.dart';
-import 'package:chat_app/src/pages/loading_page.dart';
-import 'package:chat_app/src/pages/register_page.dart';
+import 'package:chat_app/src/ui/pages/chat_page.dart';
+import 'package:chat_app/src/ui/pages/login_page.dart';
+import 'package:chat_app/src/ui/pages/users_page.dart';
+import 'package:chat_app/src/ui/pages/loading_page.dart';
+import 'package:chat_app/src/ui/pages/register_page.dart';
 
 class AppRoutes {
   static const String LOGIN = 'login';
