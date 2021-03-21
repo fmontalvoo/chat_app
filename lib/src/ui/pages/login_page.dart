@@ -1,5 +1,5 @@
-import 'package:chat_app/src/helpers/show_alert.dart';
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
 
 import 'package:chat_app/src/ui/widgets/logo.dart';
@@ -8,6 +8,8 @@ import 'package:chat_app/src/ui/widgets/blue_button.dart';
 import 'package:chat_app/src/ui/widgets/custom_input.dart';
 
 import 'package:chat_app/src/services/auth_service.dart';
+
+import 'package:chat_app/src/helpers/show_alert.dart';
 
 import 'package:chat_app/src/routes/app_routes.dart';
 
@@ -89,9 +91,6 @@ class _FormState extends State<_Form> {
                 ? null
                 : () async {
                     FocusScope.of(context).unfocus();
-                    // context
-                    //     .read<AuthService>()
-                    //     .login(emailCtrl.text.trim(), passCtrl.text.trim());
                     final user = await authService.login(
                         emailCtrl.text.trim(), passCtrl.text.trim());
 

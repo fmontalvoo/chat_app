@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+import 'package:chat_app/src/services/auth_service.dart';
+
 import 'package:chat_app/src/ui/widgets/logo.dart';
 import 'package:chat_app/src/ui/widgets/labels.dart';
 import 'package:chat_app/src/ui/widgets/blue_button.dart';
 import 'package:chat_app/src/ui/widgets/custom_input.dart';
 
 import 'package:chat_app/src/routes/app_routes.dart';
+
+import 'package:chat_app/src/helpers/show_alert.dart';
 
 class RegisterPage extends StatelessWidget {
   @override
@@ -54,6 +59,7 @@ class _FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
     return Container(
       margin: EdgeInsets.only(
         top: 40.0,
@@ -88,7 +94,17 @@ class _FormState extends State<_Form> {
               'Registrate',
               style: TextStyle(fontSize: 18.0),
             ),
-            onPressed: () {},
+            onPressed: authService.autenticando
+                ? null
+                : () async {
+                    final user = await authService.signup(nameCtrl.text.trim(),
+                        emailCtrl.text.trim(), passCtrl.text.trim());
+
+                    if (user != null)
+                      Navigator.pushReplacementNamed(context, AppRoutes.USERS);
+                    else
+                      showAlert(context, "Error", "Revise sus credenciales");
+                  },
           ),
         ],
       ),
