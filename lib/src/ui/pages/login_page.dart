@@ -8,6 +8,7 @@ import 'package:chat_app/src/ui/widgets/blue_button.dart';
 import 'package:chat_app/src/ui/widgets/custom_input.dart';
 
 import 'package:chat_app/src/services/auth_service.dart';
+import 'package:chat_app/src/services/socket_service.dart';
 
 import 'package:chat_app/src/helpers/show_alert.dart';
 
@@ -60,6 +61,8 @@ class _FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
+
     return Container(
       margin: EdgeInsets.only(
         top: 40.0,
@@ -94,9 +97,10 @@ class _FormState extends State<_Form> {
                     final user = await authService.login(
                         emailCtrl.text.trim(), passCtrl.text.trim());
 
-                    if (user != null)
+                    if (user != null) {
+                      socketService.coonect();
                       Navigator.pushReplacementNamed(context, AppRoutes.USERS);
-                    else
+                    } else
                       showAlert(context, "Error",
                           "EL usuario o contraseña son incorrectos");
                   },

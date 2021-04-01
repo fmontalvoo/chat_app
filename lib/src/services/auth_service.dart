@@ -24,7 +24,7 @@ class AuthService with ChangeNotifier {
 
   UserModel get user => this._user;
 
-  Future<String> getToken() async {
+  static Future<String> getToken() async {
     final storage = new FlutterSecureStorage();
     final token = await storage.read(key: 'jwt');
     return token;
