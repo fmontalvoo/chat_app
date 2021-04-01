@@ -3,7 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
+import 'package:provider/provider.dart';
+
 import 'package:chat_app/src/ui/widgets/chat_message.dart';
+
+import 'package:chat_app/src/services/chat_service.dart';
 
 class ChatPage extends StatefulWidget {
   @override
@@ -19,33 +23,22 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final chatService = context.watch<ChatService>();
     return Scaffold(
-      appBar: _appBar(),
+      appBar: _appBar(chatService.to.name),
       body: _body(),
     );
   }
 
-  AppBar _appBar() {
+  AppBar _appBar(String name) {
     return AppBar(
-      elevation: 1.0,
-      centerTitle: true,
-      backgroundColor: Colors.white,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircleAvatar(
-            child: Text("Us"),
-            radius: 20.0,
-            backgroundColor: Colors.blue[100],
-          ),
-          SizedBox(width: 5.0),
-          Text(
-            "Usuario",
-            style: TextStyle(color: Colors.black54),
-          )
-        ],
-      ),
-    );
+        elevation: 1.0,
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        title: Text(
+          name,
+          style: TextStyle(color: Colors.black54),
+        ));
   }
 
   Widget _body() {

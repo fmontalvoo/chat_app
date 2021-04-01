@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import 'package:chat_app/src/models/user_model.dart';
+
 import 'package:chat_app/src/services/auth_service.dart';
+import 'package:chat_app/src/services/user_service.dart';
+import 'package:chat_app/src/services/chat_service.dart';
 import 'package:chat_app/src/services/socket_service.dart';
 
 import 'package:chat_app/src/routes/app_routes.dart';
@@ -17,12 +21,21 @@ class _UsersPageState extends State<UsersPage> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
+  final _userService = new UserService();
+  List<UserModel> _users = <UserModel>[];
+
+  @override
+  void initState() {
+    this._loadUsers();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(context),
       body: SmartRefresher(
-          onRefresh: _onRefresh,
+          onRefresh: _loadUsers,
           enablePullDown: true,
           header: WaterDropHeader(
             complete: Icon(
@@ -69,32 +82,38 @@ class _UsersPageState extends State<UsersPage> {
 
   ListView _body() {
     return ListView.separated(
-      physics: BouncingScrollPhysics(),
-      itemBuilder: (_, index) => _userListTile(),
-      separatorBuilder: (_, index) => Divider(),
-      itemCount: 4,
-    );
+        physics: BouncingScrollPhysics(),
+        itemBuilder: (_, index) => _userListTile(this._users[index]),
+        separatorBuilder: (_, index) => Divider(),
+        itemCount: this._users.length);
   }
 
-  ListTile _userListTile() {
+  ListTile _userListTile(UserModel user) {
     return ListTile(
-      title: Text("Usuario"),
-      subtitle: Text("example@email.com"),
+      title: Text(user.name),
+      subtitle: Text(user.email),
       leading: CircleAvatar(
-        child: Text("Us"),
+        child: Text(user.name.substring(0, 2)),
         backgroundColor: Colors.blue[100],
       ),
       trailing: Container(
         width: 10,
         height: 10,
-        decoration:
-            BoxDecoration(shape: BoxShape.circle, color: Colors.green[400]),
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: user.online ? Colors.green[400] : Colors.red[400]),
       ),
+      onTap: () {
+        final chatService = context.read<ChatService>();
+        chatService.to = user;
+        Navigator.pushNamed(context, AppRoutes.CHAT);
+      },
     );
   }
 
-  void _onRefresh() async {
-    await Future.delayed(Duration(milliseconds: 1000));
+  void _loadUsers() async {
+    this._users = await this._userService.getUsers();
+    setState(() {});
     _refreshController.refreshCompleted();
   }
 }
