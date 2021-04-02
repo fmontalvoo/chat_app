@@ -5,17 +5,17 @@ UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
 String userModelToJson(UserModel data) => json.encode(data.toJson());
 
 class UserModel {
+  bool online;
+  String name;
+  String email;
+  String uid;
+
   UserModel({
     this.online,
     this.name,
     this.email,
     this.uid,
   });
-
-  bool online;
-  String name;
-  String email;
-  String uid;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         online: json["online"],

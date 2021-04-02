@@ -8,15 +8,15 @@ UserCredential userCredentialFromJson(String str) =>
 String userCredentialToJson(UserCredential data) => json.encode(data.toJson());
 
 class UserCredential {
+  bool ok;
+  UserModel user;
+  String token;
+
   UserCredential({
     this.ok,
     this.user,
     this.token,
   });
-
-  bool ok;
-  UserModel user;
-  String token;
 
   factory UserCredential.fromJson(Map<String, dynamic> json) => UserCredential(
         ok: json["ok"],

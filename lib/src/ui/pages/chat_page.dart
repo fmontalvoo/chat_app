@@ -5,11 +5,11 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:chat_app/src/ui/widgets/chat_message.dart';
-
 import 'package:chat_app/src/services/auth_service.dart';
 import 'package:chat_app/src/services/chat_service.dart';
 import 'package:chat_app/src/services/socket_service.dart';
+
+import 'package:chat_app/src/ui/widgets/chat_message.dart';
 
 class ChatPage extends StatefulWidget {
   @override
@@ -26,7 +26,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   ChatService _chatService;
   AuthService _authService;
 
-  List<ChatMessage> mensajes = [];
+  List<ChatMessage> mensajes = <ChatMessage>[];
   bool _escribiendo = false;
 
   @override
@@ -36,6 +36,8 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
     this._authService = context.read<AuthService>();
 
     this._socketService.socket.on(event, _listenMessage);
+
+    _loadMessages(this._chatService.to.uid);
 
     super.initState();
   }
@@ -53,6 +55,21 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
     });
 
     chat.animationController.forward();
+  }
+
+  void _loadMessages(String uid) async {
+    final chats = await this._chatService.getChat(uid);
+    final history = chats.map((chat) => ChatMessage(
+          uid: chat.from,
+          message: chat.message,
+          animationController: AnimationController(
+              vsync: this, duration: Duration(milliseconds: 100))
+            ..forward(),
+        ));
+
+    setState(() {
+      this.mensajes.insertAll(0, history);
+    });
   }
 
   @override
@@ -156,7 +173,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
 
     setState(() {
       final chat = ChatMessage(
-        uid: '123',
+        uid: this._authService.user.uid,
         message: mensaje,
         animationController: AnimationController(
             vsync: this, duration: Duration(milliseconds: 500)),
