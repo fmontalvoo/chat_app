@@ -7,7 +7,9 @@ import 'package:provider/provider.dart';
 
 import 'package:chat_app/src/ui/widgets/chat_message.dart';
 
+import 'package:chat_app/src/services/auth_service.dart';
 import 'package:chat_app/src/services/chat_service.dart';
+import 'package:chat_app/src/services/socket_service.dart';
 
 class ChatPage extends StatefulWidget {
   @override
@@ -15,17 +17,48 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
+  final String event = 'private-chat';
+
   final _controller = TextEditingController();
   final _focusNode = FocusNode();
-  bool _escribiendo = false;
+
+  SocketService _socketService;
+  ChatService _chatService;
+  AuthService _authService;
 
   List<ChatMessage> mensajes = [];
+  bool _escribiendo = false;
+
+  @override
+  void initState() {
+    this._chatService = context.read<ChatService>();
+    this._socketService = context.read<SocketService>();
+    this._authService = context.read<AuthService>();
+
+    this._socketService.socket.on(event, _listenMessage);
+
+    super.initState();
+  }
+
+  void _listenMessage(dynamic payload) {
+    final chat = ChatMessage(
+      uid: payload['from'],
+      message: payload['message'],
+      animationController: AnimationController(
+          vsync: this, duration: Duration(milliseconds: 500)),
+    );
+
+    setState(() {
+      mensajes.insert(0, chat);
+    });
+
+    chat.animationController.forward();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final chatService = context.watch<ChatService>();
     return Scaffold(
-      appBar: _appBar(chatService.to.name),
+      appBar: _appBar(this._chatService.to.name),
       body: _body(),
     );
   }
@@ -35,6 +68,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
         elevation: 1.0,
         centerTitle: true,
         backgroundColor: Colors.white,
+        leading: BackButton(color: Colors.black54),
         title: Text(
           name,
           style: TextStyle(color: Colors.black54),
@@ -115,10 +149,11 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   }
 
   void _submit(String mensaje) {
-    if (mensajes.isEmpty) return;
-    print(mensaje);
+    if (mensaje.isEmpty) return;
+
     _controller.clear();
     _focusNode.requestFocus();
+
     setState(() {
       final chat = ChatMessage(
         uid: '123',
@@ -130,11 +165,18 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
       mensajes.insert(0, chat);
       _escribiendo = false;
     });
+
+    this._socketService.socket.emit(event, {
+      'from': this._authService.user.uid,
+      'to': this._chatService.to.uid,
+      'message': mensaje
+    });
   }
 
   @override
   void dispose() {
     for (ChatMessage chat in mensajes) chat.animationController.dispose();
+    this._socketService.socket.off(event);
     super.dispose();
   }
 }
